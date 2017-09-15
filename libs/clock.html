@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+    <head></head>
+
+    <body>
+        <canvas id="canvas1" height="500px" width="500px">
+        您的浏览器不支持canvas标签。
+        </canvas>
+   
+        <script>
+        var c=document.getElementById("canvas1");
+        var clock=c.getContext("2d");
+        
+        function drawclock(){
+        //清除画布，每画一次就要清除上一次的
+        clock.clearRect(0,0,500,500);
+
+        var now=new Date();
+        var sec=now.getSeconds();
+        var min=now.getMinutes();
+        var hour=now.getHours();
+        //小时必须获取浮点类型（小时+分钟转换成的小时）
+        hour=hour+min/60;
+        //获取的时间为24小时的（），需要转换为12小时的（小时）
+        hour=hour>12?hour-12:hour;//hour是否大于12，如果大于则hour=hour-12，否则hour=hour。
+
+        //表盘
+        clock.lineWidth=10;
+        clock.strokeStyle="#41216e";
+        clock.beginPath();
+        clock.arc(250,250,100,0,360,false);
+        clock.closePath();
+        clock.stroke();
+        //时刻度,12个，所以用for循环来画
+        for(var i=0;i<12;i++){
+        	clock.save();
+        	clock.lineWidth=6;
+        	clock.strokeStyle="#6f3a81";
+        	//先设置（0，0）点
+        	clock.translate(250,250);
+        	//再设置旋转角度
+        	clock.rotate(i*30*Math.PI/180);
+        	clock.beginPath();
+        	clock.moveTo(0,-93);
+        	clock.lineTo(0,-80);
+        	clock.stroke();
+        	clock.closePath();
+        	clock.restore();
+        }
+        //分刻度
+        for(var j=0;j<60;j++){
+        	clock.save();
+        	clock.lineWidth=4;
+        	clock.strokeStyle="#6f3a81";
+        	clock.translate(250,250);
+        	clock.rotate(j*6*Math.PI/180);
+        	clock.beginPath();
+        	clock.moveTo(0,-93);
+        	clock.lineTo(0,-85);
+        	clock.stroke();
+        	clock.closePath();
+        	clock.restore();
+        }
+        //时针
+            clock.save();
+            clock.lineWidth=6;
+            clock.strokeStyle="#170523";
+            clock.translate(250,250);
+            clock.rotate(hour*30*Math.PI/180);
+            clock.beginPath();
+            clock.moveTo(0,-40);
+            clock.lineTo(0,10);
+            clock.lineCap="round";
+            clock.closePath(); 
+            clock.stroke();
+            clock.restore();
+        //分针
+            clock.save();
+            clock.lineWidth=4;
+            clock.strokeStyle="#170523";
+            clock.translate(250,250);
+            clock.rotate(min*6*Math.PI/180);
+            clock.beginPath();
+            clock.moveTo(0,-58);
+            clock.lineTo(0,15);
+            clock.closePath();
+            clock.stroke();
+            clock.restore();
+        //秒针
+            clock.save();
+            clock.lineWidth=2;
+            clock.strokeStyle="#c582ba";
+            clock.translate(250,250);
+            clock.rotate(sec*6*Math.PI/180);
+            clock.beginPath();
+            clock.moveTo(-70,0);
+            clock.lineTo(16,0);
+            clock.stroke();
+            clock.closePath();
+            //画出时针，分针，秒针的交叉点
+            clock.beginPath();
+            clock.fillStyle="black";
+            clock.arc(0,0,5,0,360);
+            clock.arc(-60,0,2.5,0,360);
+            clock.fill();
+            clock.closePath();
+            clock.stroke();
+            clock.restore();
+        }
+            //使用setInterval
+            setInterval(drawclock,1000);
+        </script> 
+    </body>
+</html>
